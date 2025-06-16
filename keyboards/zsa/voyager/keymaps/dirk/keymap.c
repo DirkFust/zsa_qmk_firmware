@@ -271,28 +271,34 @@ void caps_word_set_user(bool active) {
  *    COMBOS                                                                                                            *
  * See https://docs.qmk.fm/#/feature_combo                                                                              *
  * !! When new combos are declared, COMBO_COUNT in config.h must be adjusted to the new number! !!                      *
- * I am using a "nifty trick" below, so this is not necessary. I don't fully understand this trick                      *
+ * I am using a "nifty trick" below, so this is not necessary.                                                          *
  ************************************************************************************************************************/
 
 // define combo names
 enum combos {
   COMBO_TOGGLE_MOUSE,
+  COMBO_TOGGLE_F_LAYER_WIN,
+  COMBO_TOGGLE_F_LAYER_MAC,
 
   // nifty trick to auto-specify how many combos you have
   COMBO_LENGTH
 };
 
-// nifty trick continued
+// nifty trick continued. Every item in an enum gets a consecutive number, so the last
+// item has the number <number of items>. This so COMBO_LEN=COMBO_LENGTH
 uint16_t COMBO_LEN = COMBO_LENGTH;
 
 // define keys that make up combos
 // Combos are declared on the keycodes of the base layer (see #define COMBO_ONLY_FROM_LAYER 0 in config.h), so other layers work with them, even if the keys are set to NO_OP
 const uint16_t PROGMEM toggle_mouse[] = {LT(MOVEMENT, KC_BSPC), LT(SYM_NUM, KC_TAB), COMBO_END};
+const uint16_t PROGMEM toggle_f_layer_win[] = {MT(MOD_LCTL, KC_ENTER), WIN_HR_F, COMBO_END};
+const uint16_t PROGMEM toggle_f_layer_mac[] = {MT(MOD_LCTL, KC_ENTER), MAC_HR_F, COMBO_END};
 
 //map combo names to their keys and the keys to their trigger.
-//all but three combos (those with COMBO, not COMBO_ACTION) are handled in process_combo_event()
 combo_t key_combos[] = {
-  [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)), // not handled in process_combo_event()
+  [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)),
+  [COMBO_TOGGLE_F_LAYER_WIN] = COMBO(toggle_f_layer_win, OSL(FUNCTION)),
+  [COMBO_TOGGLE_F_LAYER_MAC] = COMBO(toggle_f_layer_mac, OSL(FUNCTION)),
 };
 
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)
