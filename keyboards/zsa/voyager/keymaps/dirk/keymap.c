@@ -6,6 +6,7 @@
 #include "tap_hold_helper.c"
 #include "color_helper.c"
 #include "keymap_us_international.h"
+#include "dynamic_mt.h"
 
 #define OS_DETECTION_KEYBOARD_RESET
 #define OS_DETECTION_DEBOUNCE 250
@@ -30,10 +31,40 @@
 #define XXXXXXX KC_NO
 #define XXXXXXXX KC_NO
 #define XXXXXXXXX KC_NO
+#define XXXXXXXXXX KC_NO
+#define XXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXXXXXXX KC_NO
+#define XXXXXXXXXXXXXXXXXX KC_NO
 
 #define TAB_LEFT LCTL(LSFT(KC_TAB))
 #define TAB_RIGHT LCTL(KC_TAB)
 
+// Define mod-tap for homerow-mods. There is a set of definitions for WIN and one for MAC
+// Both are missing the rightmost key, it is defined with HR_QUOT because it needs to do more than MT() provides
+// WIN homerow-mods
+#define WIN_HR_A MT(MOD_LGUI, KC_A)
+#define WIN_HR_S MT(MOD_LALT, KC_S)
+#define WIN_HR_D MT(MOD_LCTL, KC_D)
+#define WIN_HR_F MT(MOD_LSFT, KC_F)
+#define WIN_HR_J MT(MOD_RSFT, KC_J)
+#define WIN_HR_K MT(MOD_RCTL, KC_K)
+#define WIN_HR_L MT(MOD_RALT, KC_L)
+
+// MAC homerow-mods
+#define MAC_HR_A MT(MOD_LCTL, KC_A)
+#define MAC_HR_S MT(MOD_LALT, KC_S)
+#define MAC_HR_D MT(MOD_LGUI, KC_D)
+#define MAC_HR_F MT(MOD_LSFT, KC_F)
+#define MAC_HR_J MT(MOD_RSFT, KC_J)
+#define MAC_HR_K MT(MOD_RGUI, KC_K)
+#define MAC_HR_L MT(MOD_RALT, KC_L)
+
+
+// define for nicer name
 #define REMOVE_MODS true // remove (and reset) mods before tapping the given key for win/mac? For movement keys (especially 'home' and 'end') I want to be able to press shift to select text.
 
 static uint8_t current_layer = 0;
@@ -51,9 +82,7 @@ enum custom_keycodes {
   CU_END,       // end (win/mac)
   CU_PGUP,      // page up (win/mac)
   CU_PGDOWN,    // page down (win/mac)
-  CU_MACSPC,    // additional space for mac layout. Only together with the command mod
 
-  CU_QUOT,      // us KC_QUOT has ' and ". I want them the other way round... " unshifted, ' shifted
   CU_HASH,      // # and ` for us keyboard layout
   CU_PLUS,      // + and * for us keyboard layout
   CU_SLASH,     // / and backslash for us keyboard layout
@@ -64,8 +93,25 @@ enum custom_keycodes {
   CU_OE,        // ö
   CU_UE,        // ü
   CU_EURO,      // €
-  CU_DEG,       // ° (win/mac)
-  CU_SECT,      // § (win/mac)
+  CU_DEG,       // °
+  CU_SECT,      // §
+
+  // THE FOLLOWING KEYS ARE USED TO ADDRESS DIFFERENCES BETWEEN WIN/MAC
+  HR_QUOT,      // us KC_QUOT has ' and ". I want them the other way round... " unshifted, ' shifted. And this key is part of the homerow-mods
+  CU_LCMD,      // standin for the mod KC_LGUI, but I switch the behavior for win/mac
+  CU_LCTL,      // standin for the mod KC_LCTL, but I switch the behavior for win/mac
+  CU_PSCR,      // mac has no printscreen, so handle this
+  // mod-tap for SYM_NUM-layer. The clean way would be to have two layers for win/mac, but this was fun to develop.
+  // this is dynamic_mt, that kind of mimics MT(), mod-tap, but with flexible mods, depending on a condition.
+  // THIS DOES NOT MIX WELL WITH MT-KEYS, so on a layer with only dynamic_mt this is ok, but it tends to break with real MT()
+  HR_EQL,       // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_QUES,      // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_EXLM,      // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_LPRN,      // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_4,         // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_5,         // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_6,         // dynamic_mt homerow mod on SYM_NUM-layer
+  HR_PAST,      // dynamic_mt homerow mod on SYM_NUM-layer
 };
 
 enum layers {
@@ -131,23 +177,35 @@ bool caps_word_press_user(uint16_t keycode) {
   }
 }
 
+// See: https://docs.qmk.fm/tap_hold#chordal-hold
+// tells chordal hold which keys are considered on the left/right hand.
+// I want the thumb keys to not be left/right so they don't "block" same-hand-holds (for too long, for example typing "(" and other braces requires the switch to SYM_NUM-layer and the key, both on the same hand)
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
+  LAYOUT_voyager(
+        'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
+                            '*', '*',            '*', '*'
+    );
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
-        KC_ESCAPE    , KC_Q    , KC_W   , KC_E    , KC_R     , KC_T    ,             KC_Z       , KC_U      , KC_I    , KC_O   , KC_P   , KC_DEL ,
-        TG_UML       , KC_A    , KC_S   , KC_D    , KC_F     , KC_G    ,             KC_H       , KC_J      , KC_K    , KC_L   , CU_QUOT, CU_HASH,
-        CW_TOGG      , KC_Y    , KC_X   , KC_C    , KC_V     , KC_B    ,             KC_N       , KC_M      , CU_COMMA, CU_DOT , KC_MINS, CU_PLUS,
-        OSL(FUNCTION), XXXXXXXX, XXXXXXX, CU_SLASH, KC_LGUI  , XXXXXXX ,             XXXXXXXXX  , KC_RGUI   , XXXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
-                           MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB) ,             LT(MOVEMENT, KC_BSPC)  , KC_SPACE
+        KC_ESCAPE    , KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,           KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
+        TG_UML       , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,           KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
+        CW_TOGG      , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,           KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
+        OSL(FUNCTION), XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,           XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
+                        MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),           LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
   [MAC] = LAYOUT_voyager( // GUI acts as COMMAND in macOs, CTRL as control
-        _______, _______, _______, _______, _______  , _______,             _______, _______, _______, _______, ____________, ________,
-        _______, _______, _______, _______, _______  , _______,             _______, _______, _______, _______, ____________, ________,
-        _______, _______, _______, _______, _______  , _______,             _______, _______, _______, _______, ____________, ________,
-        _______, _______, _______, _______, CU_MACSPC, _______,             _______, XXXXXXX, _______, _______, S(G(KC_F16)), G(KC_R) ,
-                   MT(MOD_LGUI, KC_ENTER) ,LT(SYM_NUM, KC_TAB),             LT(MOVEMENT, KC_BSPC), MT(MOD_LCTL, KC_SPACE)
+        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, ____________, _______,
+        _______, MAC_HR_A, MAC_HR_S, MAC_HR_D, MAC_HR_F, _____,             _______, MAC_HR_J, MAC_HR_K, MAC_HR_L, ____________, _______,  // HR for HOME_ROW_MOD
+        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, ____________, _______,
+        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, S(G(KC_F16)), G(KC_R),
+                                MT(MOD_LGUI, KC_ENTER) , _____,             _______, ________
   ),
   [UMLAUT] = LAYOUT_voyager(
-        _______, KC_AT, _____, CU_EURO, _______, _______,                          _______, CU_UE, _______, CU_OE, _______, KC_PSCR,
+        _______, KC_AT, _____, CU_EURO, _______, _______,                          _______, CU_UE, _______, CU_OE, _______, CU_PSCR,
         _______, CU_AE, US_SS, _______, _______, _______,                          _______, _____, _______, KC_AT, _______, _______,
         _______, _____, _____, _______, _______, _______,                          _______, _____, _______, _____, _______, _______,
         _______, _____, _____, _______, _______, _______,                          _______, _____, _______, _____, _______, _______,
@@ -155,14 +213,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [SYM_NUM] = LAYOUT_voyager(
         KC_ESCAPE, CU_DEG, CU_SECT, KC_PERC, KC_DLR , CU_CIRC,                       XXXXXXX, KC_7   , KC_8   , KC_9   , KC_EQL , KC_DEL,
-        CU_TILD  , KC_EQL, KC_EXLM, KC_QUES, KC_LPRN, KC_RPRN,                       KC_PPLS, KC_4   , KC_5   , KC_6   , KC_PAST, XXXXXX,
+        CU_TILD  , HR_EQL, HR_EXLM, HR_QUES, HR_LPRN, KC_RPRN,                       KC_PPLS, HR_4   , HR_5   , HR_6   , HR_PAST, XXXXXX,
         XXXXXXX  , XXXXXX, KC_AMPR, KC_PIPE, KC_LCBR, KC_RCBR,                       KC_PMNS, KC_1   , KC_2   , KC_3   , KC_PSLS, XXXXXX,
         XXXXXXX  , XXXXXX, KC_LABK, KC_RABK, KC_LBRC, KC_RBRC,                       XXXXXXX, KC_DOT , KC_COLN, KC_COMM, XXXXXXX, XXXXXX,
-                                              ______, _______,                       _______, KC_KP_0
+                                              ______, _______,                       _______, KC_0
   ),
   [MOVEMENT] = LAYOUT_voyager(
         _______, CU_PGUP  , CU_HOME , KC_UP  , CU_END   , XXXXXXX,                   OS_TOGGLE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
-        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                   XXXXXXX  , KC_LSFT, CU_LCMD, KC_LALT, CU_LCTL, XXXXXXXXX ,
         _______, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
         _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _________ ,
                                                  _______, _______,                   ________ , _______
@@ -220,24 +278,6 @@ void caps_word_set_user(bool active) {
 enum combos {
   COMBO_TOGGLE_MOUSE,
 
-  COMBO_LSHIFT,
-  COMBO_LCTRL,
-  COMBO_LALT,
-  COMBO_LCTRL_SHIFT,
-  COMBO_LCTRL_ALT,
-  COMBO_LCTRL_ALT_SHIFT,
-  COMBO_LALT_SHIFT1,
-  COMBO_LALT_SHIFT2,
-
-  COMBO_RSHIFT,
-  COMBO_RCTRL,
-  COMBO_RALT,
-  COMBO_RCTRL_SHIFT,
-  COMBO_RCTRL_ALT,
-  COMBO_RCTRL_ALT_SHIFT,
-  COMBO_RALT_SHIFT1,
-  COMBO_RALT_SHIFT2,
-
   // nifty trick to auto-specify how many combos you have
   COMBO_LENGTH
 };
@@ -249,165 +289,18 @@ uint16_t COMBO_LEN = COMBO_LENGTH;
 // Combos are declared on the keycodes of the base layer (see #define COMBO_ONLY_FROM_LAYER 0 in config.h), so other layers work with them, even if the keys are set to NO_OP
 const uint16_t PROGMEM toggle_mouse[] = {LT(MOVEMENT, KC_BSPC), LT(SYM_NUM, KC_TAB), COMBO_END};
 
-const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM sd_combo[] = {KC_S, KC_D, COMBO_END};
-const uint16_t PROGMEM as_combo[] = {KC_A, KC_S, COMBO_END};
-const uint16_t PROGMEM sdf_combo[] = {KC_S, KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM adf_combo[] = {KC_A, KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM asd_combo[] = {KC_A, KC_S, KC_D, COMBO_END};
-const uint16_t PROGMEM asf_combo[] = {KC_A, KC_S, KC_F, COMBO_END};
-const uint16_t PROGMEM asdf_combo[] = {KC_A, KC_S, KC_D, KC_F, COMBO_END};
-
-const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
-const uint16_t PROGMEM kl_combo[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM lquot_combo[] = {KC_L, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM jkl_combo[] = {KC_J, KC_K, KC_L, COMBO_END};
-
-const uint16_t PROGMEM jkquot_combo[] = {KC_J, KC_K, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM jlquot_combo[] = {KC_J, KC_L, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM klquot_combo[] = {KC_K, KC_L, CU_QUOT, COMBO_END};
-const uint16_t PROGMEM jklquot_combo[] = {KC_J, KC_K, KC_L, CU_QUOT, COMBO_END};
-
-void process_combo_event(uint16_t combo_index, bool pressed) {
-  #ifdef CONSOLE_ENABLE
-  if (pressed) {
-    uprint("pressed: ");
-  } else {
-    uprint("released:");
-  }
-  #endif
-
-  uint16_t alt = KC_LALT;
-  uint16_t ctrl = KC_LCTL;
-  if (is_mac) {
-    alt = KC_LOPT;
-    ctrl = KC_LCMD;
-  }
-
-  switch (combo_index) {
-    case COMBO_LCTRL: case COMBO_RCTRL:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_CTRL: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(ctrl);
-      } else {
-        unregister_code(ctrl);
-      }
-      break;
-    case COMBO_LALT: case COMBO_RALT:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_ALT: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(alt);
-      } else {
-        unregister_code(alt);
-      }
-      break;
-    case COMBO_LCTRL_SHIFT: case COMBO_RCTRL_SHIFT:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_CTRL_SHIFT: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(ctrl);
-        register_code(KC_LSFT);
-
-      } else {
-        unregister_code(KC_LSFT);
-        unregister_code(ctrl);
-      }
-      break;
-    case COMBO_LCTRL_ALT: case COMBO_RCTRL_ALT:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_LCTRL_ALT: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(ctrl);
-        register_code(alt);
-
-      } else {
-        unregister_code(alt);
-        unregister_code(ctrl);
-      }
-      break;
-    case COMBO_LALT_SHIFT1: case COMBO_LALT_SHIFT2: case COMBO_RALT_SHIFT1: case COMBO_RALT_SHIFT2:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_ALT_SHIFT: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(alt);
-        register_code(KC_LSFT);
-
-      } else {
-        unregister_code(KC_LSFT);
-        unregister_code(alt);
-      }
-      break;
-    case COMBO_LCTRL_ALT_SHIFT: case COMBO_RCTRL_ALT_SHIFT:
-      #ifdef CONSOLE_ENABLE
-        uprintf("COMBO_CTRL_ALT_SHIFT: %u\n", combo_index);
-      #endif
-      if (pressed) {
-        register_code(ctrl);
-        register_code(alt);
-        register_code(KC_LSFT);
-
-      } else {
-        unregister_code(KC_LSFT);
-        unregister_code(alt);
-        unregister_code(ctrl);
-      }
-      break;
-    default:
-      break;
-  }
-}
-
 //map combo names to their keys and the keys to their trigger.
 //all but three combos (those with COMBO, not COMBO_ACTION) are handled in process_combo_event()
 combo_t key_combos[] = {
   [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)), // not handled in process_combo_event()
-  // Left hand single mod
-  [COMBO_LSHIFT] = COMBO(df_combo, KC_LSFT), // not handled in process_combo_event()
-  [COMBO_LCTRL] = COMBO_ACTION(sd_combo),
-  [COMBO_LALT] = COMBO_ACTION(as_combo),
-
-  // Left hand two mods
-  [COMBO_LCTRL_SHIFT] = COMBO_ACTION(sdf_combo),
-  [COMBO_LCTRL_ALT] = COMBO_ACTION(asd_combo),
-  // two combos for alt-shift. Every combo for two mods consists of three keys.
-  // when the two mods are next to each other (shift+ctrl, alt+ctrl) all keys of both mods are pressed, since they overlap.
-  // the single non-overlapping mod combination alt+shift needs two keys of one mod and one of the other to use the same logic of three keys.
-  // since there is no natural "leading mod" that obviously gets two keys and one "lesser mod" that just uses one, both combos ("two keys for shift, one for alt" and "one key for shift, two for alt")
-  // are bound to alt+shift
-  [COMBO_LALT_SHIFT1] = COMBO_ACTION(adf_combo),
-  [COMBO_LALT_SHIFT2] = COMBO_ACTION(asf_combo),
-
-  // Left hand three mods
-  [COMBO_LCTRL_ALT_SHIFT] = COMBO_ACTION(asdf_combo),
-
-  // Right hand single mod
-  [COMBO_RSHIFT] = COMBO(jk_combo, KC_LSFT), // not handled in process_combo_event()
-  [COMBO_RCTRL] = COMBO_ACTION(kl_combo),
-  [COMBO_RALT] = COMBO_ACTION(lquot_combo),
-
-  // Right hand two mods
-  [COMBO_RCTRL_SHIFT] = COMBO_ACTION(jkl_combo),
-  [COMBO_RCTRL_ALT] = COMBO_ACTION(klquot_combo),
-
-  // two combos for alt+shift, see above why
-  [COMBO_RALT_SHIFT1] = COMBO_ACTION(jkquot_combo),
-  [COMBO_RALT_SHIFT2] = COMBO_ACTION(jlquot_combo),
-
-  // Right hand three mods
-  [COMBO_RCTRL_ALT_SHIFT] = COMBO_ACTION(jklquot_combo),
 };
 
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)
 // A key counts as HOLD if held longer than TAPPING_TERM, as TAP/DOUBLE TAP if shorter
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case LT(SYM_NUM, KC_TAB):
+      return 150;
     // case HYPR_T(KC_SPACE):
     //   return TAPPING_TERM * 2.5;
     default:
@@ -454,44 +347,47 @@ uint32_t detect_os_callback(uint32_t trigger_time, void *cb_arg) {
   return 0;
 }
 
-void detect_os(void) {
-    switch (detected_host_os()) {
-      case OS_MACOS:
-        #ifdef CONSOLE_ENABLE
-          uprint("DETECTED MAC-OS\n");
-        #endif
-        set_os_mac();
-        break;
-      case OS_IOS:
-        #ifdef CONSOLE_ENABLE
-          uprint("DETECTED iOS\n");
-        #endif
-        set_os_mac();
-        break;
-      case OS_WINDOWS:
-        #ifdef CONSOLE_ENABLE
-          uprint("DETECTED WINDOWS\n");
-        #endif
-        set_os_win();
-        break;
-      case OS_LINUX:
-        #ifdef CONSOLE_ENABLE
-          uprint("DETECTED LINUX\n");
-        #endif
-        set_os_win();
-        break;
-      case OS_UNSURE:
-        #ifdef CONSOLE_ENABLE
-          uprint("unsure about os\n");
-        #endif
-        set_os_mac();
-        break;
-  }
+/************************************************************************************************************************
+ *    DYNAMIC-MT                                                                                                        *
+ * Mod-Tap is used to have a modifier on hold and a normal key on tap. This is the normal way for homerow-mods          *
+ * I want to use the keyboard for win and mac, and some modifiers differ between the different os's, but the            *
+ * mod-tap system can't change the modifier depending on some condition (like "which os am I connected to")             *
+ * So I build a system to handle this.
+ ************************************************************************************************************************/
+
+// Custom tap handler for HR_QUOT. This is a deadkey under US international and is used to write ä, for example, as "a.
+// I want to use it as a non-dead key, so I have to tap SPACE afterwards and juggle with the SHIFT mod
+void hr_quot_tap_handler(void) {
+    if (get_mods() & MOD_MASK_SHIFT) {
+        uint8_t saved_mods = get_mods();
+        del_mods(saved_mods);
+        tap_code16(KC_QUOT);
+        tap_code16(KC_SPACE);
+        set_mods(saved_mods);
+    } else {
+        tap_code16(KC_DOUBLE_QUOTE);
+        tap_code16(KC_SPACE);
+    }
 }
+
+// Configure your dynamic mod-tap keys - explicitly list which keys are MT keys
+static dynamic_mt_state_t mt_states[] = {
+    // Argument sequence: Keycode, mac-modifer, win-modifier, tap-action/keycode
+    DEFINE_DYNAMIC_MT_CUSTOM(HR_QUOT, KC_RCTL, KC_RGUI, hr_quot_tap_handler),     // we want to do more than just type a single key
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_EQL, KC_LCTL, KC_LGUI, KC_EQL),                   // all other just have a simple keycode to tap
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_QUES, KC_LGUI, KC_LCTL, KC_QUES),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_5, KC_RGUI, KC_RCTL, KC_5),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_PAST, KC_RCTL, KC_RGUI, KC_PAST),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_EXLM, KC_LALT, KC_LALT, KC_EXLM),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_LPRN, KC_LSFT, KC_LSFT, KC_LPRN),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_4, KC_RSFT, KC_RSFT, KC_4),
+    DEFINE_DYNAMIC_MT_SIMPLE(HR_6, KC_RALT, KC_RALT, KC_6),
+};
 
 void keyboard_post_init_user(void) {
   rgb_matrix_enable();
   rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+  init_dynamic_mt_states(mt_states, ARRAY_SIZE(mt_states));
 
   defer_exec(5000, change_led_effect_heatmap_callback, NULL);
   defer_exec(500, detect_os_callback, NULL);
@@ -564,6 +460,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
   return state;
 }
+
 
 // Handles custom keycodes related to specific functionality
 static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
@@ -657,31 +554,14 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
       }
       return true;
 
-    case CU_QUOT:
-      if (record->event.pressed) {
-        if (mod_state & MOD_MASK_SHIFT) {
-          del_mods(mod_state);
-          tap_code16(KC_QUOT);
-          tap_code16(KC_SPACE);
-          set_mods(mod_state);
-        } else {
-          tap_code16(KC_DOUBLE_QUOTE);
-          tap_code16(KC_SPACE);
-        }
-      }
-      return true;
+    case CU_PSCR:
+      return win_or_mac(KC_PSCR, KC_F13, is_mac, REMOVE_MODS, record);
 
     case CU_PGUP:
       return win_or_mac(KC_PGUP, G(KC_UP), is_mac, !REMOVE_MODS, record); // do not remove mods
 
     case CU_PGDOWN:
       return win_or_mac(KC_PGDN, G(KC_DOWN), is_mac, !REMOVE_MODS, record); // do not remove mods
-
-    case CU_MACSPC:
-      if (is_mac && record->event.pressed && (mod_state & MOD_MASK_CTRL)) {
-        tap_code16(KC_SPACE); // Additional Space for mac. Only used for COMMAND-Space, since those two are on the same key for mac
-      }
-      return true;
 
     case CU_SLASH: // Slash and backslash
       if (record->event.pressed) {
@@ -748,11 +628,28 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
       return true;
 
     case CU_CIRC:
-    if (record->event.pressed) {
-      tap_code16(KC_CIRCUMFLEX);
-      tap_code16(KC_SPACE);
-    }
-    return true;
+      if (record->event.pressed) {
+        tap_code16(KC_CIRCUMFLEX);
+        tap_code16(KC_SPACE);
+      }
+      return true;
+
+    case CU_LCTL:
+      if (record->event.pressed) {
+        register_code16(is_mac ? KC_LCTL : KC_LGUI);
+      } else {
+        unregister_code16(is_mac ? KC_LCTL : KC_LGUI);
+      }
+      return false;
+
+    case CU_LCMD:
+      if (record->event.pressed) {
+        register_code16(is_mac ? KC_LGUI : KC_LCTL);
+      } else {
+        unregister_code16(is_mac ? KC_LGUI : KC_LCTL);
+      }
+      return false;
+
   }
   return true;
 }
@@ -862,6 +759,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     uprintf("keycode: 0x%04X/%u, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u, active Mods: 0x%02X: \n", keycode, keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count, get_mods());
   #endif
+
+  // Handle dynamic mod-tap keys
+  if (!process_dynamic_mt(keycode, record)) {
+    return false; // Key was handled by dynamic MT system
+  }
 
   // Handle one-shot layer behavior
   if (!handle_one_shot_layer_for_f_keys(keycode, record, &in_one_shot_layer_f_keys)) {
