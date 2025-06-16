@@ -3,6 +3,8 @@
  *  See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
  */
 #define USB_SUSPEND_WAKEUP_DELAY 0
+#define CHORDAL_HOLD
+#define PERMISSIVE_HOLD
 
 /*
  * Edit the layout under https://configure.zsa.io/voyager/layouts, so that it looks like what you want, then compile and download.
@@ -10,7 +12,6 @@
  * The last two parts go into the firmware version here, seperated by a "/"
  * This makes Keymapp use the keyboard layout
  */
-#define USB_SUSPEND_WAKEUP_DELAY 0
 #define SERIAL_NUMBER "al9ov/aNNGWO"
 #define LAYER_STATE_16BIT
 #define ONESHOT_TAP_TOGGLE 3 /* Tapping this number of times holds the key until tapped once again. */
@@ -36,7 +37,7 @@
 #define COMBO_MUST_HOLD_MODS
 
 #define TAPPING_TERM_PER_KEY
-#define TAPPING_TERM 200 // 200ms
+#define TAPPING_TERM 200 // in ms
 
 #define RGB_MATRIX_STARTUP_SPD 60
 
