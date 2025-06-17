@@ -191,10 +191,10 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
-        KC_ESCAPE    , KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,           KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
-        TG_UML       , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,           KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
-        CW_TOGG      , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,           KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
-        OSL(FUNCTION), XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,           XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
+        KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,           KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
+        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,           KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
+        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,           KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
+        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,           XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
                         MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),           LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
   [MAC] = LAYOUT_voyager( // GUI acts as COMMAND in macOs, CTRL as control
@@ -231,13 +231,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXX, XXXXXX, XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX ,        XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
         XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,        XXXXXXXXX , ____________ , ____________ , ____________  , XXXXXX, XXXXXX,
                                                     XXXXXXXXX   , KC_MS_BTN1,        KC_MS_BTN2, XXXXXXXXX
-  ),
-  [GAMING] = LAYOUT_voyager(
-        _______, KC_1, KC_2, KC_3, KC_4, KC_5,                                     KC_6, KC_7, KC_8    , KC_9  , KC_0     , TO(BASE),
-        _______, KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Z, KC_U, KC_I    , KC_O  , KC_P     , KC_LBRC ,
-        _______, KC_A, KC_S, KC_D, KC_F, KC_G,                                     KC_H, KC_J, KC_K    , KC_L  , KC_COLON , KC_QUOTE,
-        KC_LSFT, KC_Y, KC_X, KC_C, KC_V, KC_B,                                     KC_N, KC_M, KC_COMMA, KC_DOT, KC_SLASH , KC_RSFT ,
-                           _________, _________,                                     _________, _________
   ),
   [FUNCTION] = LAYOUT_voyager(
         ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                            XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
