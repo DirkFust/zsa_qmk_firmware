@@ -191,53 +191,53 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
-        KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,           KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
-        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,           KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
-        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,           KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
-        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,           XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
-                        MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),           LT(MOVEMENT, KC_BSPC)  , KC_SPACE
+        KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,                                                        KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
+        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,                                                        KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
+        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,                                                        KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
+        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,                                                        XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
+                    MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                        LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
   [MAC] = LAYOUT_voyager( // GUI acts as COMMAND in macOs, CTRL as control
-        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, ____________, _______,
-        _______, MAC_HR_A, MAC_HR_S, MAC_HR_D, MAC_HR_F, _____,             _______, MAC_HR_J, MAC_HR_K, MAC_HR_L, ____________, _______,  // HR for HOME_ROW_MOD
-        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, ____________, _______,
-        _______, ________, ________, ________, ________, _____,             _______, ________, ________, ________, S(G(KC_F16)), G(KC_R),
-                                MT(MOD_LGUI, KC_ENTER) , _____,             _______, ________
+        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, ____________, _______,
+        _______, MAC_HR_A, MAC_HR_S, MAC_HR_D, MAC_HR_F, _____,                                                         _______, MAC_HR_J, MAC_HR_K, MAC_HR_L, ____________, _______,  // HR for HOME_ROW_MOD
+        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, ____________, _______,
+        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, S(G(KC_F16)), G(KC_R),
+                                MT(MOD_LGUI, KC_ENTER) , _____,                                                         _______, ________
   ),
   [UMLAUT] = LAYOUT_voyager(
-        _______, KC_AT, _____, CU_EURO, _______, _______,                          _______, CU_UE, _______, CU_OE, _______, CU_PSCR,
-        _______, CU_AE, US_SS, _______, _______, _______,                          _______, _____, _______, KC_AT, _______, _______,
-        _______, _____, _____, _______, _______, _______,                          _______, _____, _______, _____, _______, _______,
-        _______, _____, _____, _______, _______, _______,                          _______, _____, _______, _____, _______, _______,
-                                        _______, _______,                          _______, _____
+        _______, KC_AT, _____, CU_EURO, _______, _______,                                                               _______, CU_UE, _______, CU_OE, _______, CU_PSCR,
+        _______, CU_AE, US_SS, _______, _______, _______,                                                               _______, _____, _______, KC_AT, _______, _______,
+        _______, _____, _____, _______, _______, _______,                                                               _______, _____, _______, _____, _______, _______,
+        _______, _____, _____, _______, _______, _______,                                                               _______, _____, _______, _____, _______, _______,
+                                        _______, _______,                                                               _______, _____
   ),
   [SYM_NUM] = LAYOUT_voyager(
-        KC_ESCAPE, CU_DEG, CU_SECT, KC_PERC, KC_DLR , CU_CIRC,                       XXXXXXX, KC_7   , KC_8   , KC_9   , KC_EQL , KC_DEL,
-        CU_TILD  , HR_EQL, HR_EXLM, HR_QUES, HR_LPRN, KC_RPRN,                       KC_PPLS, HR_4   , HR_5   , HR_6   , HR_PAST, XXXXXX,
-        XXXXXXX  , XXXXXX, KC_AMPR, KC_PIPE, KC_LCBR, KC_RCBR,                       KC_PMNS, KC_1   , KC_2   , KC_3   , KC_PSLS, XXXXXX,
-        XXXXXXX  , XXXXXX, KC_LABK, KC_RABK, KC_LBRC, KC_RBRC,                       XXXXXXX, KC_DOT , KC_COLN, KC_COMM, XXXXXXX, XXXXXX,
-                                              ______, _______,                       _______, KC_0
+        KC_ESCAPE, CU_DEG, CU_SECT, KC_PERC, KC_DLR , CU_CIRC,                                                          XXXXXXX, KC_7   , KC_8   , KC_9   , KC_EQL , KC_DEL,
+        CU_TILD  , HR_EQL, HR_EXLM, HR_QUES, HR_LPRN, KC_RPRN,                                                          KC_PPLS, HR_4   , HR_5   , HR_6   , HR_PAST, XXXXXX,
+        XXXXXXX  , XXXXXX, KC_AMPR, KC_PIPE, KC_LCBR, KC_RCBR,                                                          KC_PMNS, KC_1   , KC_2   , KC_3   , KC_PSLS, XXXXXX,
+        XXXXXXX  , XXXXXX, KC_LABK, KC_RABK, KC_LBRC, KC_RBRC,                                                          XXXXXXX, KC_DOT , KC_COLN, KC_COMM, XXXXXXX, XXXXXX,
+                                              ______, _______,                                                          _______, KC_0
   ),
   [MOVEMENT] = LAYOUT_voyager(
-        _______, CU_PGUP  , CU_HOME , KC_UP  , CU_END   , XXXXXXX,                   OS_TOGGLE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
-        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                   XXXXXXX  , KC_LSFT, CU_LCMD, KC_LALT, CU_LCTL, XXXXXXXXX ,
-        _______, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
-        _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _________ ,
-                                                 _______, _______,                   ________ , _______
+        _______, CU_PGUP  , CU_HOME , KC_UP  , CU_END   , XXXXXXX,                                                      OS_TOGGLE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
+        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                                                      XXXXXXX  , KC_LSFT, CU_LCMD, KC_LALT, CU_LCTL, XXXXXXXXX ,
+        _______, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                                                      XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                                                      XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _________ ,
+                                                 _______, _______,                                                      ________ , _______
   ),
   [MOUSE] = LAYOUT_voyager(
-        XXXXXX, XXXXXX, XXXXXXXXX   , KC_MS_UP    , XXXXXXXXX   , XXXXXXXXX ,        XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, KC_MS_LEFT  , KC_MS_DOWN  , KC_MS_RIGHT , XXXXXXXXX ,        XXXXXXXXX , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX ,        XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,        XXXXXXXXX , ____________ , ____________ , ____________  , XXXXXX, XXXXXX,
-                                                    XXXXXXXXX   , KC_MS_BTN1,        KC_MS_BTN2, XXXXXXXXX
+        XXXXXX, XXXXXX, XXXXXXXXX   , KC_MS_UP    , XXXXXXXXX   , XXXXXXXXX ,                                           XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, KC_MS_LEFT  , KC_MS_DOWN  , KC_MS_RIGHT , XXXXXXXXX ,                                           XXXXXXXXX , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX ,                                           XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
+        XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,                                           XXXXXXXXX , ____________ , ____________ , ____________  , XXXXXX, XXXXXX,
+                                                    XXXXXXXXX   , KC_MS_BTN1,                                           KC_MS_BTN2, XXXXXXXXX
   ),
   [FUNCTION] = LAYOUT_voyager(
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                            XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                            XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                            XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
-        TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                            XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
-                                          ______, ______,                            ______, _________
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
+        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
+        TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
+                                          ______, ______,                                                               ______, _________
   ),
 };
 
@@ -264,6 +264,7 @@ void caps_word_set_user(bool active) {
  *    COMBOS                                                                                                            *
  * See https://docs.qmk.fm/#/feature_combo                                                                              *
  * !! When new combos are declared, COMBO_COUNT in config.h must be adjusted to the new number! !!                      *
+ *
  * I am using a "nifty trick" below, so this is not necessary.                                                          *
  ************************************************************************************************************************/
 
