@@ -191,11 +191,11 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
-        KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T,                                                        KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
-        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G,                                                        KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
-        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B,                                                        KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
-        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXX,                                                        XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
-                    MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                        LT(MOVEMENT, KC_BSPC)  , KC_SPACE
+        KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T   ,                                                     KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
+        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G   ,                                                     KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
+        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B   ,                                                         KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
+        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, KC_LBRC , KC_RBRC,                                                     XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
+                       MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                     LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
   [MAC] = LAYOUT_voyager( // GUI acts as COMMAND in macOs, CTRL as control
         _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, ____________, _______,
@@ -219,11 +219,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                               ______, _______,                                                          _______, KC_0
   ),
   [MOVEMENT] = LAYOUT_voyager(
-        _______, CU_PGUP  , CU_HOME , KC_UP  , CU_END   , XXXXXXX,                                                      OS_TOGGLE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
-        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT , XXXXXXX,                                                      XXXXXXX  , KC_LSFT, CU_LCMD, KC_LALT, CU_LCTL, XXXXXXXXX ,
-        _______, XXXXXXXXX, TAB_LEFT, XXXXXXX, TAB_RIGHT, XXXXXXX,                                                      XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
-        _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX, XXXXXXX,                                                      XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _________ ,
-                                                 _______, _______,                                                      ________ , _______
+        _______, CU_PGUP  , CU_HOME , KC_UP  , CU_END      , XXXXXXX,                                                   OS_TOGGLE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(GAMING),
+        _______, CU_PGDOWN, KC_LEFT , KC_DOWN, KC_RIGHT    , XXXXXXX,                                                   XXXXXXX  , KC_LSFT, CU_LCMD, KC_LALT, CU_LCTL, XXXXXXXXX ,
+        _______, XXXXXXXXX, KC_COMMA, XXXXXXX, KC_SEMICOLON, XXXXXXX,                                                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXXXX ,
+        _______, XXXXXXXXX, XXXXXXXX, XXXXXXX, XXXXXXXXX   , XXXXXXX,                                                   XXXXXXX  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _________ ,
+                                                 _________ , _______,                                                   ________ , _______
   ),
   [MOUSE] = LAYOUT_voyager(
         XXXXXX, XXXXXX, XXXXXXXXX   , KC_MS_UP    , XXXXXXXXX   , XXXXXXXXX ,                                           XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
