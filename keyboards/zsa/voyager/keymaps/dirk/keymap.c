@@ -233,10 +233,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                     XXXXXXXXX   , KC_MS_BTN1,                                           KC_MS_BTN2, XXXXXXXXX
   ),
   [FUNCTION] = LAYOUT_voyager(
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
-        ________, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
-        TO(BASE), XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX,                                                               XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
+        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
+        ________, CU_LCTL, KC_LALT, CU_LCMD, KC_LSFT, XXXXXX,                                                           XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
+        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
+        TO(BASE), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
                                           ______, ______,                                                               ______, _________
   ),
 };
@@ -270,9 +270,8 @@ void caps_word_set_user(bool active) {
 
 // define combo names
 enum combos {
-  COMBO_TOGGLE_MOUSE,
-  COMBO_TOGGLE_F_LAYER_WIN,
-  COMBO_TOGGLE_F_LAYER_MAC,
+  // COMBO_TOGGLE_MOUSE,
+  COMBO_TOGGLE_F_LAYER,
 
   // nifty trick to auto-specify how many combos you have
   COMBO_LENGTH
@@ -284,15 +283,13 @@ uint16_t COMBO_LEN = COMBO_LENGTH;
 
 // define keys that make up combos
 // Combos are declared on the keycodes of the base layer (see #define COMBO_ONLY_FROM_LAYER 0 in config.h), so other layers work with them, even if the keys are set to NO_OP
-const uint16_t PROGMEM toggle_mouse[] = {LT(MOVEMENT, KC_BSPC), LT(SYM_NUM, KC_TAB), COMBO_END};
-const uint16_t PROGMEM toggle_f_layer_win[] = {MT(MOD_LCTL, KC_ENTER), WIN_HR_F, COMBO_END};
-const uint16_t PROGMEM toggle_f_layer_mac[] = {MT(MOD_LCTL, KC_ENTER), MAC_HR_F, COMBO_END};
+const uint16_t PROGMEM toggle_f_layer[] = {LT(MOVEMENT, KC_BSPC), LT(SYM_NUM, KC_TAB), COMBO_END};
+// const uint16_t PROGMEM toggle_mouse[] = {MT(MOD_LCTL, KC_ENTER), KC_M, COMBO_END};
 
 //map combo names to their keys and the keys to their trigger.
 combo_t key_combos[] = {
-  [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)),
-  [COMBO_TOGGLE_F_LAYER_WIN] = COMBO(toggle_f_layer_win, OSL(FUNCTION)),
-  [COMBO_TOGGLE_F_LAYER_MAC] = COMBO(toggle_f_layer_mac, OSL(FUNCTION)),
+  // [COMBO_TOGGLE_MOUSE] = COMBO(toggle_mouse, TG(MOUSE)),
+  [COMBO_TOGGLE_F_LAYER] = COMBO(toggle_f_layer, OSL(FUNCTION)),
 };
 
 // Set tapping term per key (https://docs.qmk.fm/#/tap_hold?id=tapping-term)
