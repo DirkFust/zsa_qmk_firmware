@@ -135,3 +135,7 @@ via*.json
 !/keyboards/zsa/**/keymaps/oryx/**
 !/keyboards/zsa/**/keymaps/dirk
 !/keyboards/zsa/**/keymaps/dirk/**
+
+# Mac thinks
+.DS_Store
+**/.DS_Store

@@ -13,12 +13,26 @@
  * This makes Keymapp use the keyboard layout
  */
 #define SERIAL_NUMBER "al9ov/QzBV5V"
-#define LAYER_STATE_16BIT
+#define LAYER_STATE_8BIT
 #define ONESHOT_TAP_TOGGLE 3 /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 5000 /* Time (in ms) before the one shot key is released */
 
 // enables the status LEDs. Use STATUS_LED_1(true) to STATUS_LED_4(false). 1 (red) and 2 (green) are left, 3 (red) and 4 (green) are right
 #define VOYAGER_USER_LEDS
+
+// Navigator Trackball
+#define WHEEL_EXTENDED_SUPPORT
+#define POINTING_DEVICE_HIRES_SCROLL_ENABLE
+#define POINTING_DEVICE_HIRES_SCROLL_EXPONENT 1
+#define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
+#define MOUSE_EXTENDED_REPORT
+#define NAVIGATOR_SCROLL_DIVIDER 50
+
+#define POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#define AUTO_MOUSE_DEFAULT_LAYER 3
+#define AUTO_MOUSE_THRESHOLD 10
+#define AUTO_MOUSE_SCROLL_THRESHOLD AUTO_MOUSE_THRESHOLD / NAVIGATOR_SCROLL_DIVIDER
+#define RGB_MATRIX_STARTUP_SPD 60
 
 /************************************************************************************************************************
  *    COMBOS                                                                                                            *
