@@ -29,7 +29,7 @@
 #define NAVIGATOR_SCROLL_DIVIDER 50
 
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#define AUTO_MOUSE_DEFAULT_LAYER 3
+#define AUTO_MOUSE_DEFAULT_LAYER 5 // Count layers from 0
 #define AUTO_MOUSE_THRESHOLD 10
 #define AUTO_MOUSE_SCROLL_THRESHOLD AUTO_MOUSE_THRESHOLD / NAVIGATOR_SCROLL_DIVIDER
 #define RGB_MATRIX_STARTUP_SPD 60
@@ -38,7 +38,6 @@
  *    COMBOS                                                                                                            *
  * See https://docs.qmk.fm/#/feature_combo                                                                              *
  ************************************************************************************************************************/
-// #define COMBO_COUNT 8
 #define COMBO_ONLY_FROM_LAYER 0
 
 // how quickly all combo keys must be pressed in succession to trigger (ms)

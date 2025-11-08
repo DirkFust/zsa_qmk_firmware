@@ -96,6 +96,13 @@ enum custom_keycodes {
   CU_DEG,       // °
   CU_SECT,      // §
 
+  DRAG_SCROLL,
+  TOGGLE_SCROLL,
+  NAVIGATOR_INC_CPI,
+  NAVIGATOR_DEC_CPI,
+  NAVIGATOR_TURBO,
+  NAVIGATOR_AIM,
+
   // THE FOLLOWING KEYS ARE USED TO ADDRESS DIFFERENCES BETWEEN WIN/MAC
   HR_QUOT,      // us KC_QUOT has ' and ". I want them the other way round... " unshifted, ' shifted. And this key is part of the homerow-mods
   CU_LCMD,      // standin for the mod KC_LGUI, but I switch the behavior for win/mac
@@ -193,7 +200,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
         KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T   ,                                                     KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
         TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G   ,                                                     KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
-        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B   ,                                                         KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
+        CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B   ,                                                     KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
         XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, KC_LBRC , KC_RBRC,                                                     XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
                        MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                     LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
@@ -226,20 +233,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                  _________ , _______,                                                   ________ , _______
   ),
   [MOUSE] = LAYOUT_voyager(
-        XXXXXX, XXXXXX, XXXXXXXXX   , KC_MS_UP    , XXXXXXXXX   , XXXXXXXXX ,                                           XXXXXXXXX , XXXXXXXXX    , KC_MS_WH_UP  , XXXXXXXXX     , XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, KC_MS_LEFT  , KC_MS_DOWN  , KC_MS_RIGHT , XXXXXXXXX ,                                           XXXXXXXXX , KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_RIGHT, XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX   , XXXXXXXXX ,                                           XXXXXXXXX , XXXXXXXXX    , XXXXXXXXX    , XXXXXXXXX     , XXXXXX, XXXXXX,
-        XXXXXX, XXXXXX, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, XXXXXXXXX ,                                           XXXXXXXXX , ____________ , ____________ , ____________  , XXXXXX, XXXXXX,
-                                                    XXXXXXXXX   , KC_MS_BTN1,                                           KC_MS_BTN2, XXXXXXXXX
+        NAVIGATOR_DEC_CPI, NAVIGATOR_INC_CPI, XXXXXXX, XXXXXXXXXX, XXXXXXXXX , QK_LLCK     ,                            XXXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXX, XXXXXX,
+        XXXXXXXXXXXXXXXXX, CU_LCTL          , KC_LALT, CU_LCMD   , KC_LSFT   , KC_MS_BTN2  ,                            KC_MS_BTN3, XXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXX, XXXXXX,
+        XXXXXXXXXXXXXXXXX, XXXXXXXXXXXXXXXXX, XXXXXXX, XXXXXXXXXX, KC_MS_BTN2, XXXXXXXXXXXX,                            XXXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXX, XXXXXX,
+        XXXXXXXXXXXXXXXXX, XXXXXXXXXXXXXXXXX, XXXXXXX, XXXXXXXXXX, XXXXXXXXXX, XXXXXXXXXXXX,                            XXXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXXXXX, XXXXXX, XXXXXX,
+                                                                   KC_MS_BTN1, DRAG_SCROLL ,                            XXXXXXXXXX, XXXXXXXXX
   ),
   [FUNCTION] = LAYOUT_voyager(
-        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
-        ________, CU_LCTL, KC_LALT, CU_LCMD, KC_LSFT, XXXXXX,                                                           XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
-        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
-        TO(BASE), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXX,                                                           XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
-                                          ______, ______,                                                               ______, _________
+        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_LLCK,                                                          XXXXXX, KC_F1 , KC_F2 , KC_F3 , XXXXXX, XXXXXX,
+        ________, CU_LCTL, KC_LALT, CU_LCMD, KC_LSFT, XXXXXXX,                                                          XXXXXX, KC_F4 , KC_F5 , KC_F6 , XXXXXX, XXXXXX,
+        ________, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                                          XXXXXX, KC_F7 , KC_F8 , KC_F9 , XXXXXX, XXXXXX,
+        TO(BASE), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                                          XXXXXX, KC_F10, KC_F11, KC_F12, XXXXXX, XXXXXX,
+                                             _______, _______,                                                          ______, ______
   ),
 };
+
+/******************************
+ NAVIGATOR
+******************************/
+extern bool set_scrolling;
+extern bool navigator_turbo;
+extern bool navigator_aim;
+void pointing_device_init_user(void) {
+  set_auto_mouse_enable(true);
+}
+
+bool is_mouse_record_kb(uint16_t keycode, keyrecord_t* record) {
+  switch (keycode) {
+    case NAVIGATOR_INC_CPI ... NAVIGATOR_AIM:
+    case DRAG_SCROLL:
+    case TOGGLE_SCROLL:
+    case KC_MS_BTN3:
+    case KC_MS_BTN2:
+    case KC_MS_BTN1:
+      return true;
+  }
+  return is_mouse_record_user(keycode, record);
+}
 
 /************************************************************************************************************************
 * Status LEDs                                                                                                           *
@@ -469,6 +499,59 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
           toggle_os_layer();
           return false;  // Skip default processing
       }
+
+    case QK_MODS ... QK_MODS_MAX:
+      // Mouse keys with modifiers work inconsistently across operating systems, this makes sure that modifiers are always
+      // applied to the mouse key that was pressed.
+      if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
+        if (record->event.pressed) {
+          add_mods(QK_MODS_GET_MODS(keycode));
+          send_keyboard_report();
+          wait_ms(2);
+          register_code(QK_MODS_GET_BASIC_KEYCODE(keycode));
+          return false;
+        } else {
+          wait_ms(2);
+          del_mods(QK_MODS_GET_MODS(keycode));
+        }
+      }
+      break;
+    case DRAG_SCROLL:
+      if (record->event.pressed) {
+        set_scrolling = true;
+      } else {
+        set_scrolling = false;
+      }
+      return false;
+    case TOGGLE_SCROLL:
+      if (record->event.pressed) {
+        set_scrolling = !set_scrolling;
+      }
+      return false;
+    case NAVIGATOR_TURBO:
+      if (record->event.pressed) {
+        navigator_turbo = true;
+      } else {
+        navigator_turbo = false;
+      }
+      return false;
+    case NAVIGATOR_AIM:
+      if (record->event.pressed) {
+        navigator_aim = true;
+      } else {
+        navigator_aim = false;
+      }
+      return false;
+    case NAVIGATOR_INC_CPI:
+      if (record->event.pressed) {
+        pointing_device_set_cpi(1);
+      }
+      return false;
+    case NAVIGATOR_DEC_CPI:
+      if (record->event.pressed) {
+        pointing_device_set_cpi(0);
+     }
+    return false;
 
     case CU_HOME:
       return win_or_mac(KC_HOME, G(KC_LEFT), is_mac, !REMOVE_MODS, record); // do not remove mods
@@ -777,4 +860,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // gets called all the time with every matrix scan
 void matrix_scan_user(void) {
   STATUS_LED_2(!is_mac); // switch os-layer status led on/off. Mac=off, Win=on
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+  if (set_scrolling) {
+    mouse_report.v = -mouse_report.v;
+  }
+  return mouse_report;
 }
