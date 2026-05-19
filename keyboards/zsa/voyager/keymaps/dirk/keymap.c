@@ -201,15 +201,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T   ,                                                     KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
         TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G   ,                                                     KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
         CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B   ,                                                     KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
-        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, KC_LBRC , KC_RBRC,                                                     XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
+        XXXXXXXXX, XXXXXXXX, XXXXXXX , CU_SLASH, XXXXXXXX, XXXXXXX,                                                     XXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXX, KC_F5  ,
                        MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                     LT(MOVEMENT, KC_BSPC)  , KC_SPACE
   ),
   [MAC] = LAYOUT_voyager( // GUI acts as COMMAND in macOs, CTRL as control
-        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, ____________, _______,
-        _______, MAC_HR_A, MAC_HR_S, MAC_HR_D, MAC_HR_F, _____,                                                         _______, MAC_HR_J, MAC_HR_K, MAC_HR_L, ____________, _______,  // HR for HOME_ROW_MOD
-        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, ____________, _______,
-        _______, ________, ________, ________, ________, _____,                                                         _______, ________, ________, ________, S(G(KC_F16)), G(KC_R),
-                                MT(MOD_LGUI, KC_ENTER) , _____,                                                         _______, ________
+        _______, ________, ________, ________, ____________, _____,                                                     _______, ________, ________, ________    , ____________, _______,
+        _______, MAC_HR_A, MAC_HR_S, MAC_HR_D, MAC_HR_F    , _____,                                                     _______, MAC_HR_J, MAC_HR_K, MAC_HR_L    , ____________, _______,  // HR for HOME_ROW_MOD
+        _______, ________, ________, ________, ____________, _____,                                                     _______, ________, ________, ____________, ____________, _______,
+        _______, ________, ________, ________, S(G(KC_F18)), _____,                                                     _______, ________, ________, S(G(KC_F11)), S(G(KC_F12)), G(KC_R),
+                                    MT(MOD_LGUI, KC_ENTER) , _____,                                                     _______, ________
   ),
   [UMLAUT] = LAYOUT_voyager(
         _______, KC_AT, _____, CU_EURO, _______, _______,                                                               _______, CU_UE, _______, CU_OE, _______, CU_PSCR,
