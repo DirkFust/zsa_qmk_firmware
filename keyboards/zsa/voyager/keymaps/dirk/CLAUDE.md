@@ -14,7 +14,7 @@ QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, w
 | `color_helper.c` | RGB matrix HSV/effect callbacks for `defer_exec` |
 | `rgb_matrix_user.inc` | Custom RGB matrix effects (e.g. `overwatch`) |
 | `keymap.json` | Oryx export — source of truth for the Keymapp visualization, not the firmware |
-| `voyager_dirk.bin` | **Compiled artifact, should not be tracked** |
+| `voyager_dirk.bin` | Compiled artifact, tracked so old builds stay flashable from git history |
 
 ## Layers
 
@@ -77,7 +77,6 @@ A mod-tap variant where the *modifier* differs between Mac and Win, while the ta
 - **New custom keycodes** go in the `enum custom_keycodes` block (keymap.c:76) AND get a case in `handle_custom_keycodes` (keymap.c:493). Both, or it silently no-ops.
 - **New combos** must be added to the `combos` enum BEFORE `COMBO_LENGTH` (the "nifty trick" auto-sizes `COMBO_LEN`).
 - **`config.h` is the right place** for QMK feature `#define`s, not `keymap.c`. (Two are currently misplaced — see TODO.md.)
-- **Never commit `voyager_dirk.bin`.** It's a build artifact.
 - **Commits:** no mention of Claude/AI. Conventional commits (`fix:`, `feat:`, `refactor:`).
 
 ## Known bugs and tech debt
