@@ -1,0 +1,5 @@
+# Compiled firmware artifact
+voyager_dirk.bin
+
+# Claude Code local settings
+.claude/
