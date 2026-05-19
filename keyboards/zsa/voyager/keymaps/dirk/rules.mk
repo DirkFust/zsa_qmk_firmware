@@ -17,3 +17,4 @@ OS_DETECTION_ENABLE = yes
 
 SRC += dynamic_mt.c
 SRC += tap_hold_helper.c
+SRC += color_helper.c

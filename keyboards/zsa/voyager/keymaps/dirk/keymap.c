@@ -4,7 +4,7 @@
 #include "print.h"
 #include "version.h"
 #include "tap_hold_helper.h"
-#include "color_helper.c"
+#include "color_helper.h"
 #include "keymap_us_international.h"
 #include "dynamic_mt.h"
 
