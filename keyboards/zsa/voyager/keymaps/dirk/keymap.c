@@ -497,8 +497,8 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
     case OS_TOGGLE:
       if (record->event.pressed) {
           toggle_os_layer();
-          return false;  // Skip default processing
       }
+      return false;  // Skip default processing
 
     case QK_MODS ... QK_MODS_MAX:
       // Mouse keys with modifiers work inconsistently across operating systems, this makes sure that modifiers are always
