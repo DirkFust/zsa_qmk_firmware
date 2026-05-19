@@ -570,13 +570,14 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
         if (is_mac) {
           tap_code16(S(KC_NONUS_BACKSLASH)); // This is a macOs special- I want the tilde ~ here, normally on SHIFT(KC_GRAVE). But macOs uses it for ±
           tap_code16(KC_SPACE);
+          set_mods(mod_state);
           return false;
         } else {
           tap_code16(KC_TILD);
           tap_code16(KC_SPACE);
+          set_mods(mod_state);
           return true;
         }
-        set_mods(mod_state);
       }
       return true;
 
