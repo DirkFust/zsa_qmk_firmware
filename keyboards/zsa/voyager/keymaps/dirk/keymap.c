@@ -3,7 +3,7 @@
 #include QMK_KEYBOARD_H
 #include "print.h"
 #include "version.h"
-#include "tap_hold_helper.c"
+#include "tap_hold_helper.h"
 #include "color_helper.c"
 #include "keymap_us_international.h"
 #include "dynamic_mt.h"
