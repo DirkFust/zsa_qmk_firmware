@@ -68,6 +68,10 @@ bool process_dynamic_mt(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(state->simple_keycode);
             }
         }
+
+        // Reset state so a released key can't be "interrupted" by later keypresses.
+        state->timer       = 0;
+        state->interrupted = false;
     }
 
     return false; // We handled this keycode
