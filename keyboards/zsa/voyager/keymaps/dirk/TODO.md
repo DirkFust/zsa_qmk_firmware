@@ -48,12 +48,7 @@ These are QMK-core feature flags. They need to be visible during QMK's own compi
 ### 6. Padding-macro zoo — `keymap.c:19–41`
 14 width variants of `XXX*` and 8 of `___*`. Cosmetic alignment only. A typo in underscore/X count silently compiles to the wrong padding (all map to KC_TRANSPARENT/KC_NO). Standard QMK uses one width each. Consider dropping all but `_______` and `XXXXXXX`.
 
-## Repo hygiene
-
-### 7. `voyager_dirk.bin` is tracked in git
-Compiled artifact. Add to `.gitignore` and `git rm --cached` it. It's currently showing as modified in working-tree status, which means every build re-dirties the repo.
-
 ## Verify before editing
 
-### 8. `is_mouse_record_kb` vs `is_mouse_record_user` — `keymap.c:261`
+### 7. `is_mouse_record_kb` vs `is_mouse_record_user` — `keymap.c:261`
 This function uses the `_kb` suffix from a keymap. The standard keymap-level hook is `is_mouse_record_user`. Verify QMK actually invokes `_kb` overrides defined in a keymap TU — if it doesn't, auto-mouse-layer won't recognise the trackball buttons / drag-scroll as mouse activity, so the MOUSE layer may deactivate while the trackball is in active use. Easy test: run with `CONSOLE_ENABLE = yes` and watch the layer transitions.
