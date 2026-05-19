@@ -701,7 +701,9 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
     case CU_PLUS:
       if (record->event.pressed) {
         if (mod_state & MOD_MASK_SHIFT) {
+          del_mods(mod_state);
           tap_code16(KC_ASTERISK);
+          set_mods(mod_state);
         } else {
           tap_code16(KC_PLUS);
         }
