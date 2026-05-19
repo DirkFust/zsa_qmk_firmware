@@ -6,6 +6,10 @@
 #define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
 
+// OS detection (https://docs.qmk.fm/features/os_detection)
+#define OS_DETECTION_KEYBOARD_RESET
+#define OS_DETECTION_DEBOUNCE 250
+
 /*
  * Edit the layout under https://configure.zsa.io/voyager/layouts, so that it looks like what you want, then compile and download.
  * The name of the downloaded file is something like "zsa_voyager_dirk_al9ov_BBnJA.bin". Alternativly, it can be seen here: https://configure.zsa.io/my_layout/view/al9ov

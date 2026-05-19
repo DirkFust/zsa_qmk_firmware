@@ -8,9 +8,6 @@
 #include "keymap_us_international.h"
 #include "dynamic_mt.h"
 
-#define OS_DETECTION_KEYBOARD_RESET
-#define OS_DETECTION_DEBOUNCE 250
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *  You can use _______ in place for KC_TRANS (transparent)  *
  *  Or you can use XXXXXXX for KC_NO (NOOP)                  *
