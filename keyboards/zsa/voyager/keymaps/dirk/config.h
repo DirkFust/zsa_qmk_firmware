@@ -31,6 +31,8 @@
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 5 // Count layers from 0
 #define AUTO_MOUSE_THRESHOLD 10
+#define AUTO_MOUSE_ONESHOT  // activate mouse on trackball movement, disable only on (any) keypress, after AUTO_MOUSE_TIME
+#define AUTO_MOUSE_TIME 100 // milliseconds
 #define AUTO_MOUSE_SCROLL_THRESHOLD AUTO_MOUSE_THRESHOLD / NAVIGATOR_SCROLL_DIVIDER
 #define RGB_MATRIX_STARTUP_SPD 60
 
