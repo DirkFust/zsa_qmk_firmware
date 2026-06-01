@@ -41,8 +41,3 @@ These are QMK-core feature flags. They need to be visible during QMK's own compi
 
 ### 4. Unused callbacks in `color_helper.c`
 `change_color_red_callback`, `change_color_green_callback`, `change_color_blue_callback`, `set_color` — none referenced. Only `change_led_effect_heatmap_callback` is used. Delete the others.
-
-## Verify before editing
-
-### 5. `is_mouse_record_kb` vs `is_mouse_record_user` — `keymap.c:261`
-This function uses the `_kb` suffix from a keymap. The standard keymap-level hook is `is_mouse_record_user`. Verify QMK actually invokes `_kb` overrides defined in a keymap TU — if it doesn't, auto-mouse-layer won't recognise the trackball buttons / drag-scroll as mouse activity, so the MOUSE layer may deactivate while the trackball is in active use. Easy test: run with `CONSOLE_ENABLE = yes` and watch the layer transitions.

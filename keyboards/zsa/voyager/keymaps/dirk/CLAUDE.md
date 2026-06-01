@@ -1,19 +1,19 @@
 # Dirk's Voyager Keymap — Orientation
 
-QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, with optional Navigator trackball). Built to drive both macOS and Windows from the same physical keyboard, with US-International base layout plus German umlauts.
+QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, with the Navigator trackpad). Built to drive both macOS and Windows from the same physical keyboard, with US-International base layout plus German umlauts.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
 | `keymap.c` | Layers, custom keycodes, `process_record_user`, layer indicator LEDs, OS detection, combos |
-| `config.h` | Tap/hold timings, combo settings, trackball settings, RGB matrix effect exclusions |
+| `config.h` | Tap/hold timings, combo settings, RGB matrix effect exclusions. Old `POINTING_DEVICE`/`AUTO_MOUSE` defines remain but are dormant (see Pointing device below) |
 | `rules.mk` | QMK feature toggles, additional source files |
 | `dynamic_mt.{c,h}` | OS-aware mod-tap system (see below) |
 | `tap_hold_helper.c` | Utility wrappers: `win_or_mac`, `key_and_shift`, `tap_or_hold`, `controlify_on_hold` |
 | `color_helper.c` | RGB matrix HSV/effect callbacks for `defer_exec` |
 | `rgb_matrix_user.inc` | Custom RGB matrix effects (e.g. `overwatch`) |
-| `keymap.json` | Oryx export — source of truth for the Keymapp visualization, not the firmware |
+| `keymap.json` | Declares the community `modules` compiled into the firmware (`zsa/oryx`, `zsa/defaults`, `zsa/navigator_trackpad`) — a real build input, not just an Oryx export |
 | `voyager_dirk.bin` | Compiled artifact, tracked so old builds stay flashable from git history |
 
 ## Layers
@@ -24,12 +24,23 @@ QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, w
 2  UMLAUT    — ä ö ü € ° § etc. Held while TG_UML is down.
 3  SYM_NUM   — Symbols + numpad with dynamic_mt homerow mods
 4  MOVEMENT  — Arrows, home/end, page up/down, OS toggle
-5  MOUSE     — Trackball buttons, CPI, drag-scroll (auto-activated by trackball motion)
+5  MOUSE     — Mouse buttons; CPI/drag-scroll handlers present but dormant (trackpad is a digitizer, POINTING_DEVICE off). No longer auto-activated.
 6  GAMING    — Reached via TO(GAMING) from MOVEMENT
 7  FUNCTION  — F-keys, reached via one-shot combo (BSPC+TAB thumb keys)
 ```
 
-`AUTO_MOUSE_DEFAULT_LAYER 5` couples trackball motion to the MOUSE layer.
+## Pointing device — trackpad (was trackball)
+
+The keymap targets the **Navigator trackpad**. The trackpad is a **DIGITIZER / Windows Precision Touchpad (PTP)** device, *not* a QMK pointing device:
+
+- Loaded via the `zsa/navigator_trackpad` community module in `keymap.json` (the module sets `DIGITIZER_ENABLE` + `DIGITIZER_MODE = touchpad`). `POINTING_DEVICE_ENABLE = no` in `rules.mk`.
+- The **OS** drives cursor + gestures (Windows: native PTP; macOS: the module's own scroll/inertia paths plus a generic mouse fallback). So `AUTO_MOUSE`, drag-scroll, CPI and the old layer-5 auto-activation no longer apply.
+- The trackball-coupled code in `keymap.c` (`pointing_device_*`, `is_mouse_record_kb`, the `DRAG_SCROLL`/`NAVIGATOR_*` cases) is kept but `#ifdef POINTING_DEVICE_ENABLE`-guarded out — dormant, ready to re-wire later. `DRAG_SCROLL`/`NAVIGATOR_*` keycodes now come from the `zsa/defaults` module, not a local enum.
+- Trackpad options (rotation, physical size, I²C address, mouse-fallback sensitivity) live in `modules/zsa/navigator_trackpad/config.h` + `post_config.h`, each `#ifndef`-overridable from this keymap's `config.h`.
+
+## Tap dance — G click-drag
+
+`G` on BASE is a tap-dance key (`G_DRAG` = `TD(TD_G_DRAG)`, needs `TAP_DANCE_ENABLE = yes`): **tap = `g`, hold = hold the left mouse button** for click-drag with the trackpad. `MT()` can't express this — its hold is modifier-only. It's interrupt-friendly (`state->pressed && !state->interrupted`) so rolls still type `g`; the hold engages after `TAPPING_TERM`. Lives inline in `keymap.c` (`tap_dance_codes` enum, `g_drag_finished`/`g_drag_reset`, `tap_dance_actions[]`).
 
 ## Dual-OS architecture
 
@@ -75,6 +86,7 @@ A mod-tap variant where the *modifier* differs between Mac and Win, while the ta
 - **Don't add features beyond what the task asks for.** The user prefers minimal diffs.
 - **Per-OS behavior** belongs in the existing dispatch points (`is_mac` branch, `win_or_mac`, or a new `dynamic_mt` entry) — don't introduce a fourth mechanism.
 - **New custom keycodes** go in the `enum custom_keycodes` block (keymap.c:76) AND get a case in `handle_custom_keycodes` (keymap.c:493). Both, or it silently no-ops.
+- **Tap dance** (`tap_dance_codes` enum + `tap_dance_actions[]`, inline in `keymap.c`) is a separate mechanism from `MT()`/`dynamic_mt`. Reach for it only when a hold must emit a non-modifier keycode (e.g. `G_DRAG` holds a mouse button).
 - **New combos** must be added to the `combos` enum BEFORE `COMBO_LENGTH` (the "nifty trick" auto-sizes `COMBO_LEN`).
 - **`config.h` is the right place** for QMK feature `#define`s, not `keymap.c`. (Two are currently misplaced — see TODO.md.)
 - **Commits:** no mention of Claude/AI. Conventional commits (`fix:`, `feat:`, `refactor:`).
