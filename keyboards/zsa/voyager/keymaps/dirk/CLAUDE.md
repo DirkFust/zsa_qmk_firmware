@@ -10,7 +10,7 @@ QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, w
 | `config.h` | Tap/hold timings, combo settings, RGB matrix effect exclusions. Old `POINTING_DEVICE`/`AUTO_MOUSE` defines remain but are dormant (see Pointing device below) |
 | `rules.mk` | QMK feature toggles, additional source files |
 | `dynamic_mt.{c,h}` | OS-aware mod-tap system (see below) |
-| `tap_hold_helper.c` | Utility wrappers: `win_or_mac`, `key_and_shift`, `tap_or_hold`, `controlify_on_hold` |
+| `tap_hold_helper.{c,h}` | Utility wrapper: `win_or_mac` (picks a Win/Mac keycode, optional mod-strip) |
 | `color_helper.c` | RGB matrix HSV/effect callbacks for `defer_exec` |
 | `rgb_matrix_user.inc` | Custom RGB matrix effects (e.g. `overwatch`) |
 | `keymap.json` | Declares the community `modules` compiled into the firmware (`zsa/oryx`, `zsa/defaults`, `zsa/navigator_trackpad`) — a real build input, not just an Oryx export |
@@ -88,7 +88,7 @@ A mod-tap variant where the *modifier* differs between Mac and Win, while the ta
 - **New custom keycodes** go in the `enum custom_keycodes` block (keymap.c:76) AND get a case in `handle_custom_keycodes` (keymap.c:493). Both, or it silently no-ops.
 - **Tap dance** (`tap_dance_codes` enum + `tap_dance_actions[]`, inline in `keymap.c`) is a separate mechanism from `MT()`/`dynamic_mt`. Reach for it only when a hold must emit a non-modifier keycode (e.g. `G_DRAG` holds a mouse button).
 - **New combos** must be added to the `combos` enum BEFORE `COMBO_LENGTH` (the "nifty trick" auto-sizes `COMBO_LEN`).
-- **`config.h` is the right place** for QMK feature `#define`s, not `keymap.c`. (Two are currently misplaced — see TODO.md.)
+- **`config.h` is the right place** for QMK feature `#define`s, not `keymap.c`.
 - **Commits:** no mention of Claude/AI. Conventional commits (`fix:`, `feat:`, `refactor:`).
 
 ## Known bugs and tech debt
