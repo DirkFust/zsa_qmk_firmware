@@ -7,8 +7,11 @@ RGB_MATRIX_CUSTOM_KB = yes
 SPACE_CADET_ENABLE = no
 CAPS_WORD_ENABLE = yes
 LAYER_LOCK_ENABLE = yes
-POINTING_DEVICE_ENABLE = yes
-POINTING_DEVICE_DRIVER = navigator_trackball
+TAP_DANCE_ENABLE = yes
+# Trackpad is a DIGITIZER (PTP), loaded via the zsa/navigator_trackpad module in
+# keymap.json. POINTING_DEVICE stays off; the trackball-coupled MOUSE-layer
+# handlers in keymap.c are #ifdef POINTING_DEVICE_ENABLE-guarded out for now.
+POINTING_DEVICE_ENABLE = no
 COMBO_ENABLE = yes
 DEFERRED_EXEC_ENABLE = yes
 RGB_MATRIX_CUSTOM_USER = yes

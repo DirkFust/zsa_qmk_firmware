@@ -72,12 +72,9 @@ enum custom_keycodes {
   CU_DEG,       // °
   CU_SECT,      // §
 
-  DRAG_SCROLL,
-  TOGGLE_SCROLL,
-  NAVIGATOR_INC_CPI,
-  NAVIGATOR_DEC_CPI,
-  NAVIGATOR_TURBO,
-  NAVIGATOR_AIM,
+  // DRAG_SCROLL, TOGGLE_SCROLL, NAVIGATOR_INC_CPI/DEC_CPI/TURBO/AIM are now
+  // provided as keycodes by the zsa/defaults community module. Declaring them
+  // here too gives "redeclaration of enumerator" build errors, so they are gone.
 
   // THE FOLLOWING KEYS ARE USED TO ADDRESS DIFFERENCES BETWEEN WIN/MAC
   HR_QUOT,      // us KC_QUOT has ' and ". I want them the other way round... " unshifted, ' shifted. And this key is part of the homerow-mods
@@ -172,10 +169,42 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
                             '*', '*',            '*', '*'
     );
 
+/******************************
+ TAP DANCE
+ G: tap = "g", hold = hold the left mouse button (click-drag with the trackpad).
+ MT() can't express this — its hold is modifier-only — so it uses tap dance.
+******************************/
+enum tap_dance_codes {
+  TD_G_DRAG,
+};
+#define G_DRAG TD(TD_G_DRAG)
+
+static bool g_drag_btn_held = false;
+
+void g_drag_finished(tap_dance_state_t *state, void *user_data) {
+  if (state->pressed && !state->interrupted) {  // held without a rolling interrupt -> drag
+    g_drag_btn_held = true;
+    register_code(KC_MS_BTN1);
+  } else {                                      // quick tap or rolled into another key -> type g
+    tap_code(KC_G);
+  }
+}
+
+void g_drag_reset(tap_dance_state_t *state, void *user_data) {
+  if (g_drag_btn_held) {
+    unregister_code(KC_MS_BTN1);
+    g_drag_btn_held = false;
+  }
+}
+
+tap_dance_action_t tap_dance_actions[] = {
+  [TD_G_DRAG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, g_drag_finished, g_drag_reset),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_voyager(
         KC_ESCAPE, KC_Q    , KC_W    , KC_E    , KC_R    , KC_T   ,                                                     KC_Z, KC_U    , KC_I    , KC_O    , KC_P   , KC_DEL ,
-        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, KC_G   ,                                                     KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
+        TG_UML   , WIN_HR_A, WIN_HR_S, WIN_HR_D, WIN_HR_F, G_DRAG ,                                                     KC_H, WIN_HR_J, WIN_HR_K, WIN_HR_L, HR_QUOT, CU_HASH,   // HR for HOME_ROW_MOD
         CW_TOGG  , KC_Y    , KC_X    , KC_C    , KC_V    , KC_B   ,                                                     KC_N, KC_M    , CU_COMMA, CU_DOT  , KC_MINS, CU_PLUS,
         XXXXXXX, XXXXXXX, XXXXXXX , CU_SLASH, XXXXXXX, XXXXXXX,                                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F5  ,
                        MT(MOD_LCTL, KC_ENTER), LT(SYM_NUM, KC_TAB),                                                     LT(MOVEMENT, KC_BSPC)  , KC_SPACE
@@ -227,6 +256,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /******************************
  NAVIGATOR
 ******************************/
+// Trackball-driver-coupled handlers. Dormant while the Navigator trackpad
+// (a DIGITIZER, not a pointing device) is in use. Re-enable by turning
+// POINTING_DEVICE_ENABLE back on once drag-scroll is rewired for the trackpad.
+#ifdef POINTING_DEVICE_ENABLE
 extern bool set_scrolling;
 extern bool navigator_turbo;
 extern bool navigator_aim;
@@ -246,6 +279,7 @@ bool is_mouse_record_kb(uint16_t keycode, keyrecord_t* record) {
   }
   return is_mouse_record_user(keycode, record);
 }
+#endif  // POINTING_DEVICE_ENABLE
 
 /************************************************************************************************************************
 * Status LEDs                                                                                                           *
@@ -492,6 +526,7 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
         }
       }
       break;
+#ifdef POINTING_DEVICE_ENABLE
     case DRAG_SCROLL:
       if (record->event.pressed) {
         set_scrolling = true;
@@ -528,6 +563,7 @@ static bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
         pointing_device_set_cpi(0);
      }
     return false;
+#endif  // POINTING_DEVICE_ENABLE
 
     case CU_HOME:
       return win_or_mac(KC_HOME, G(KC_LEFT), is_mac, !REMOVE_MODS, record); // do not remove mods
@@ -841,9 +877,11 @@ void matrix_scan_user(void) {
   STATUS_LED_2(!is_mac); // switch os-layer status led on/off. Mac=off, Win=on
 }
 
+#ifdef POINTING_DEVICE_ENABLE
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
   if (set_scrolling) {
     mouse_report.v = -mouse_report.v;
   }
   return mouse_report;
 }
+#endif  // POINTING_DEVICE_ENABLE
