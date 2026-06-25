@@ -2,6 +2,20 @@
 
 QMK keymap for the ZSA Voyager (split ortholinear, 52 keys + 2 thumb clusters, with the Navigator trackpad). Built to drive both macOS and Windows from the same physical keyboard, with US-International base layout plus German umlauts.
 
+## Branches & repo layout
+
+This fork (`origin` = `github.com/DirkFust/zsa_qmk_firmware`) mirrors ZSA's repo (`upstream` = `github.com/zsa/qmk_firmware`) with one branch pair per firmware generation:
+
+- **`firmwareX`** (`firmware24`, `firmware25`, `firmware26`, …) — tracks the **ZSA upstream** branch of that generation, verbatim. **No personal changes ever land here.** Update by pulling/resetting onto `upstream/firmwareX` (e.g. `git fetch upstream && git branch -f firmware25 upstream/firmware25`).
+- **`dirk-firmwareX`** — all of my work (this keymap + any module overrides), **rebased on top of `firmwareX`**. This is the branch I actually develop and flash from.
+
+**Workflow rules:**
+
+- Do all keymap work on `dirk-firmwareX`. Never commit personal changes to `firmwareX`.
+- When upstream ships a new generation, the upstream `branchX` is brought into `firmwareX`; I then **rebase `dirk-firmwareX` onto the updated `firmwareX`** (not merge) so my history stays linear on top of the original.
+- Because `dirk-firmwareX` is rebased, pushing it to `origin` needs `git push --force-with-lease`. Same for `firmwareX` after it's reset to upstream.
+- If personal commits ever end up on `firmwareX` by mistake: move them off (`git branch -f dirk-firmwareX firmwareX`), reset `firmwareX` back to `upstream/firmwareX`, then force-push both.
+
 ## Files
 
 | File | Purpose |
