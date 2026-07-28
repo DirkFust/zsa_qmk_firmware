@@ -179,14 +179,23 @@ enum tap_dance_codes {
 };
 #define G_DRAG TD(TD_G_DRAG)
 
+// Gap between the repeated g's of a multi-tap. TAP_CODE_DELAY is 0 by default, and
+// back-to-back taps of the same keycode with no gap can be coalesced by the host.
+#define G_REPEAT_TAP_GAP_MS 10
+
 static bool g_drag_btn_held = false;
 
 void g_drag_finished(tap_dance_state_t *state, void *user_data) {
   if (state->pressed && !state->interrupted) {  // held without a rolling interrupt -> drag
     g_drag_btn_held = true;
     register_code(KC_MS_BTN1);
-  } else {                                      // quick tap or rolled into another key -> type g
-    tap_code(KC_G);
+  } else {                                      // one or more quick taps / rolled into another key -> type g per tap
+    for (uint8_t i = 0; i < state->count; i++) {
+      if (i > 0) {
+        wait_ms(G_REPEAT_TAP_GAP_MS);
+      }
+      tap_code(KC_G);
+    }
   }
 }
 
@@ -342,6 +351,25 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     //   return TAPPING_TERM * 2.5;
     default:
       return TAPPING_TERM;
+  }
+}
+
+// Shift home-row mods settle as hold immediately on the next key press, so that
+// fast rolls like RSFT(J)+F produce "F" instead of "jf". CHORDAL_HOLD restricts
+// this to opposite-hand presses, so same-hand rolls still type letters. The other
+// home-row mods (GUI/CTRL/ALT) stay on PERMISSIVE_HOLD to avoid stray shortcuts.
+//
+// Caveat: the thumb keys are '*' in chordal_hold_layout, and get_chordal_hold_default()
+// treats '*' as "not same hand". So a fast F/J -> thumb roll settles as hold too:
+// f+TAB gives Shift+Tab, j+BSPC gives Shift+Backspace. Requires
+// HOLD_ON_OTHER_KEY_PRESS_PER_KEY in config.h — without it QMK never calls this.
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case WIN_HR_F:  // == MAC_HR_F, both MT(MOD_LSFT, KC_F)
+    case WIN_HR_J:  // == MAC_HR_J, both MT(MOD_RSFT, KC_J)
+      return true;
+    default:
+      return false;
   }
 }
 

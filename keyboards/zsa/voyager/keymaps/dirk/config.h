@@ -5,6 +5,9 @@
 #define USB_SUSPEND_WAKEUP_DELAY 0
 #define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
+// Required for get_hold_on_other_key_press() in keymap.c to be called at all —
+// without it QMK hardcodes the decision to "false" (quantum/action_tapping.c).
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 // OS detection (https://docs.qmk.fm/features/os_detection)
 #define OS_DETECTION_KEYBOARD_RESET

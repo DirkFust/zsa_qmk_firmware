@@ -8,6 +8,9 @@ extern bool is_mac;
 typedef struct {
     bool     interrupted;
     bool     resolved;         // hold/tap decision made? (chordal-hold path sets this)
+    bool     tapped;           // last action was a tap -> arms the quick-tap repeat
+    bool     repeating;        // currently held down as its tap keycode, not as a mod
+    uint16_t tap_time;         // when that tap was emitted
     uint16_t timer;
     uint16_t keycode; // The actual keycode this config is for
     uint16_t mac_mod;
@@ -21,10 +24,10 @@ typedef struct {
 // Macros for cleaner configuration
 
 // Define a dynamic-mt with a custom tap-handler function
-#define DEFINE_DYNAMIC_MT_CUSTOM(kc, macmod, winmod, tap_func) {.keycode = (kc), .mac_mod = (macmod), .win_mod = (winmod), .tap_handler = (tap_func), .simple_keycode = 0, .interrupted = false, .resolved = false, .timer = 0, .row = 0, .col = 0}
+#define DEFINE_DYNAMIC_MT_CUSTOM(kc, macmod, winmod, tap_func) {.keycode = (kc), .mac_mod = (macmod), .win_mod = (winmod), .tap_handler = (tap_func), .simple_keycode = 0, .interrupted = false, .resolved = false, .tapped = false, .repeating = false, .tap_time = 0, .timer = 0, .row = 0, .col = 0}
 
 // Define a dynamic-mt with a given keycode
-#define DEFINE_DYNAMIC_MT_SIMPLE(kc, macmod, winmod, tap_key) {.keycode = (kc), .mac_mod = (macmod), .win_mod = (winmod), .tap_handler = NULL, .simple_keycode = (tap_key), .interrupted = false, .resolved = false, .timer = 0, .row = 0, .col = 0}
+#define DEFINE_DYNAMIC_MT_SIMPLE(kc, macmod, winmod, tap_key) {.keycode = (kc), .mac_mod = (macmod), .win_mod = (winmod), .tap_handler = NULL, .simple_keycode = (tap_key), .interrupted = false, .resolved = false, .tapped = false, .repeating = false, .tap_time = 0, .timer = 0, .row = 0, .col = 0}
 
 // Function declarations
 bool process_dynamic_mt(uint16_t keycode, keyrecord_t *record);
