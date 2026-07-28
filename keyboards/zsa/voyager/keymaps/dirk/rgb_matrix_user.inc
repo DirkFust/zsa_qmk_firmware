@@ -1,3 +1,6 @@
+// Copyright 2026 Dirk (@DirkFust)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 // Documentation: https://docs.qmk.fm/#/feature_rgb_matrix?id=custom-rgb-matrix-effects
 
 // For inspiration and examples, check out the built-in effects under quantum/rgb_matrix/animations/.

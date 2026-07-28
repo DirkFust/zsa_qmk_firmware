@@ -1,3 +1,6 @@
+// Copyright 2026 Dirk (@DirkFust)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 #include "tap_hold_helper.h"
 
 bool win_or_mac(uint16_t keycode_win, uint16_t keycode_mac, bool is_mac, bool remove_mods, keyrecord_t *record) {

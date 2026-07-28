@@ -1,3 +1,6 @@
+// Copyright 2026 Dirk (@DirkFust)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 // clang-format off
 
 #include QMK_KEYBOARD_H

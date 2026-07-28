@@ -1,3 +1,6 @@
+// Copyright 2026 Dirk (@DirkFust)
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 #include "dynamic_mt.h"
 
 // Defined in keymap.c
