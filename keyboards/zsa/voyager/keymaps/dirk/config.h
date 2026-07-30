@@ -19,6 +19,15 @@
 // GUI/CTRL/ALT but not shift, so a capital typed mid-flow ("das Haus") would be
 // forced to a tap. QMK's own docs recommend returning 0 for shift mod-taps.
 
+// Caps Word: a held shift inverts the shift of the next key instead of ending the mode.
+// Needed because caps_word_press_user() shifts KC_MINS to get "_" for SCREAMING_SNAKE_CASE,
+// which makes a literal "-" unreachable. With this, left shift (F) + "-" types "-" and Caps
+// Word stays on. Use the LEFT shift: KC_MINS sits on the right hand, so J + "-" is a
+// same-hand chord that CHORDAL_HOLD settles as a tap.
+// Note: while Caps Word is active, the shift home-row mods no longer emit a real shift
+// (process_caps_word.c swallows them), so Shift+Arrow selection is unavailable in the mode.
+#define CAPS_WORD_INVERT_ON_SHIFT
+
 // OS detection (https://docs.qmk.fm/features/os_detection)
 #define OS_DETECTION_KEYBOARD_RESET
 #define OS_DETECTION_DEBOUNCE 250
