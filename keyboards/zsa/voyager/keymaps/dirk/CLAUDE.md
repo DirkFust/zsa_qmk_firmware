@@ -81,7 +81,7 @@ A mod-tap variant where the *modifier* differs between Mac and Win, while the ta
 
 ## Other behavioral details
 
-- `caps_word_press_user` is extended to continue Caps Word through `US_?DIA` (umlauts), `KC_MINS`, `TG_UML`, `US_SS` (ß), and the BSPC/LEFT/RIGHT layer-tap keys on MOVEMENT.
+- `caps_word_press_user` is extended to continue Caps Word through `US_?DIA` (umlauts), `KC_MINS`, `TG_UML`, `US_SS` (ß), and `KC_BSPC`/`KC_LEFT`/`KC_RIGHT`. The latter three also cover the MOVEMENT layer-tap keys: `process_caps_word.c` unwraps a tapped layer-tap to its tap keycode before calling the hook (and ignores a held one outright), so listing `LT(...)` forms is dead code.
 - `CAPS_WORD_INVERT_ON_SHIFT` (`config.h`) makes a **held shift invert** the shift of the next key instead of ending Caps Word. It exists because `KC_MINS` is shifted to `_` for SCREAMING_SNAKE_CASE, which would otherwise put a literal `-` out of reach: **left shift (F) + `-` types `-`** and the mode stays on. Use the *left* shift — `KC_MINS` is a right-hand key, so `J + -` is a same-hand chord that `CHORDAL_HOLD` settles as a tap. Two consequences: shift + letter now yields a lowercase letter mid-word, and while Caps Word is active the shift home-row mods emit no real shift at all (so Shift+Arrow selection is unavailable in the mode).
 - `chordal_hold_layout` marks thumb keys as `*` (no hand) so layer-tap on a thumb + same-hand symbol like `(` works without blocking.
 - `HR_QUOT` uses a custom tap handler because it sends `"` unshifted and `'` shifted (reversed from US standard) — plus a trailing space to escape the US-International dead-key behavior.

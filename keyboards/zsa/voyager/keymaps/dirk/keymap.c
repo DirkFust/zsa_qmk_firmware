@@ -148,11 +148,8 @@ bool caps_word_press_user(uint16_t keycode) {
   case KC_UNDS:
   case TG_UML:
   case US_SS:
-  case KC_LEFT:
-  case KC_RIGHT:
-  case LT(MOVEMENT, KC_BSPC):
-  case LT(MOVEMENT, KC_LEFT):
-  case LT(MOVEMENT, KC_RIGHT):
+  case KC_LEFT:   // also covers LT(MOVEMENT, KC_LEFT): QMK unwraps layer-taps to
+  case KC_RIGHT:  // their tap keycode before calling this hook
     return true;
 
   default:
