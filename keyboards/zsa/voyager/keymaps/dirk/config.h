@@ -8,9 +8,16 @@
 #define USB_SUSPEND_WAKEUP_DELAY 0
 #define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
-// Required for get_hold_on_other_key_press() in keymap.c to be called at all —
-// without it QMK hardcodes the decision to "false" (quantum/action_tapping.c).
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+// Deliberately NOT HOLD_ON_OTHER_KEY_PRESS: a roll ("ja") and a chord (Shift+A) are
+// indistinguishable by timing, only by release order — which is what PERMISSIVE_HOLD
+// keys off. Settling the shift home-row mods as hold on the mere press of the next
+// key turned every fast "ja" into "A", and made f->TAB / j->BSPC fire Shift+Tab /
+// Shift+Backspace (thumbs are '*' in chordal_hold_layout, which
+// get_chordal_hold_default() treats as "not same hand").
+//
+// FLOW_TAP_TERM is not the fix either: its default is_flow_tap_key() exempts
+// GUI/CTRL/ALT but not shift, so a capital typed mid-flow ("das Haus") would be
+// forced to a tap. QMK's own docs recommend returning 0 for shift mod-taps.
 
 // OS detection (https://docs.qmk.fm/features/os_detection)
 #define OS_DETECTION_KEYBOARD_RESET
