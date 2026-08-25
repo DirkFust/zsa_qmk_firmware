@@ -108,6 +108,13 @@ enum layers {
   FUNCTION,
 };
 
+// Tap dance codes. Declared up here because caps_word_press_user() below has to
+// name G_DRAG; the actions themselves live next to their callbacks further down.
+enum tap_dance_codes {
+  TD_G_DRAG,
+};
+#define G_DRAG TD(TD_G_DRAG)
+
 void set_os_mac(void) {
   layer_move(MAC);  // Switch to Mac layer
   is_mac = true;
@@ -138,6 +145,8 @@ bool caps_word_press_user(uint16_t keycode) {
   case US_ODIA:   // ö from us international keyboard layout
   case US_ADIA:   // ä from us international keyboard layout
   case KC_MINS:   // -_
+  case G_DRAG:    // "g": a tap dance keycode reaches this hook unwrapped -- QMK only
+                  // resolves mod-taps and layer-taps to their tap keycode, not TD()
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
 
@@ -174,11 +183,6 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
  G: tap = "g", hold = hold the left mouse button (click-drag with the trackpad).
  MT() can't express this — its hold is modifier-only — so it uses tap dance.
 ******************************/
-enum tap_dance_codes {
-  TD_G_DRAG,
-};
-#define G_DRAG TD(TD_G_DRAG)
-
 // Gap between the repeated g's of a multi-tap. TAP_CODE_DELAY is 0 by default, and
 // back-to-back taps of the same keycode with no gap can be coalesced by the host.
 #define G_REPEAT_TAP_GAP_MS 10
@@ -187,6 +191,11 @@ static bool g_drag_btn_held = false;
 
 void g_drag_finished(tap_dance_state_t *state, void *user_data) {
   if (state->pressed && !state->interrupted) {  // held without a rolling interrupt -> drag
+    // Caps Word already put a weak shift on the wire when this key was pressed (it
+    // can't know yet that the tap dance will resolve to a hold). Drop it, or the
+    // drag reaches the host as shift+drag -- range select instead of plain dragging.
+    del_weak_mods(MOD_BIT(KC_LSFT));
+    send_keyboard_report();
     g_drag_btn_held = true;
     register_code(KC_MS_BTN1);
   } else {                                      // one or more quick taps / rolled into another key -> type g per tap

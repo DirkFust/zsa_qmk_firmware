@@ -54,7 +54,7 @@ The keymap targets the **Navigator trackpad**. The trackpad is a **DIGITIZER / W
 
 ## Tap dance — G click-drag
 
-`G` on BASE is a tap-dance key (`G_DRAG` = `TD(TD_G_DRAG)`, needs `TAP_DANCE_ENABLE = yes`): **tap = `g`, hold = hold the left mouse button** for click-drag with the trackpad. `MT()` can't express this — its hold is modifier-only. It's interrupt-friendly (`state->pressed && !state->interrupted`) so rolls still type `g`; the hold engages after `TAPPING_TERM`. Lives inline in `keymap.c` (`tap_dance_codes` enum, `g_drag_finished`/`g_drag_reset`, `tap_dance_actions[]`).
+`G` on BASE is a tap-dance key (`G_DRAG` = `TD(TD_G_DRAG)`, needs `TAP_DANCE_ENABLE = yes`): **tap = `g`, hold = hold the left mouse button** for click-drag with the trackpad. `MT()` can't express this — its hold is modifier-only. It's interrupt-friendly (`state->pressed && !state->interrupted`) so rolls still type `g`; the hold engages after `TAPPING_TERM`. Lives inline in `keymap.c` (`tap_dance_codes` enum, `g_drag_finished`/`g_drag_reset`, `tap_dance_actions[]`). Two Caps Word couplings: `G_DRAG` is listed in `caps_word_press_user` (see below), and the drag branch of `g_drag_finished` has to `del_weak_mods(MOD_BIT(KC_LSFT))` first -- Caps Word sends its weak shift on the *press*, before the tap dance knows it will become a hold, so without that the drag arrives as shift+drag.
 
 ## Dual-OS architecture
 
@@ -81,7 +81,7 @@ A mod-tap variant where the *modifier* differs between Mac and Win, while the ta
 
 ## Other behavioral details
 
-- `caps_word_press_user` is extended to continue Caps Word through `US_?DIA` (umlauts), `KC_MINS`, `TG_UML`, `US_SS` (ß), and `KC_BSPC`/`KC_LEFT`/`KC_RIGHT`. The latter three also cover the MOVEMENT layer-tap keys: `process_caps_word.c` unwraps a tapped layer-tap to its tap keycode before calling the hook (and ignores a held one outright), so listing `LT(...)` forms is dead code.
+- `caps_word_press_user` is extended to continue Caps Word through `US_?DIA` (umlauts), `KC_MINS`, `TG_UML`, `US_SS` (ß), and `KC_BSPC`/`KC_LEFT`/`KC_RIGHT`. The latter three also cover the MOVEMENT layer-tap keys: `process_caps_word.c` unwraps a tapped layer-tap to its tap keycode before calling the hook (and ignores a held one outright), so listing `LT(...)` forms is dead code. `G_DRAG` on the other hand *must* be listed (shifted group): the hook unwraps only mod-taps and layer-taps, a `TD()` keycode arrives raw, so without that case `g` ended Caps Word. Its `enum tap_dance_codes` therefore sits up with `enum layers`, above the hook.
 - `CAPS_WORD_INVERT_ON_SHIFT` (`config.h`) makes a **held shift invert** the shift of the next key instead of ending Caps Word. It exists because `KC_MINS` is shifted to `_` for SCREAMING_SNAKE_CASE, which would otherwise put a literal `-` out of reach: **left shift (F) + `-` types `-`** and the mode stays on. Use the *left* shift — `KC_MINS` is a right-hand key, so `J + -` is a same-hand chord that `CHORDAL_HOLD` settles as a tap. Two consequences: shift + letter now yields a lowercase letter mid-word, and while Caps Word is active the shift home-row mods emit no real shift at all (so Shift+Arrow selection is unavailable in the mode).
 - `chordal_hold_layout` marks thumb keys as `*` (no hand) so layer-tap on a thumb + same-hand symbol like `(` works without blocking.
 - `HR_QUOT` uses a custom tap handler because it sends `"` unshifted and `'` shifted (reversed from US standard) — plus a trailing space to escape the US-International dead-key behavior.
