@@ -439,9 +439,14 @@ static dynamic_mt_state_t mt_states[] = {
     DEFINE_DYNAMIC_MT_SIMPLE(HR_6, KC_RALT, KC_RALT, KC_6),
 };
 
+// Every RGB call in this file uses a *_noeeprom variant on purpose. The plain
+// rgb_matrix_enable()/mode()/sethsv() mark the config dirty and rgb_task_sync()
+// flushes it on the next RGB cycle (~16ms). The STM32F303 has no real EEPROM, so
+// that flush is a write into emulated program flash - once per layer switch, all
+// day long. Nothing needs persisting: the mode is set again on every boot.
 void keyboard_post_init_user(void) {
-  rgb_matrix_enable();
-  rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+  rgb_matrix_enable_noeeprom();
+  rgb_matrix_mode_noeeprom(RGB_MATRIX_CYCLE_LEFT_RIGHT);
   init_dynamic_mt_states(mt_states, ARRAY_SIZE(mt_states));
 
   defer_exec(5000, change_led_effect_heatmap_callback, NULL);
@@ -461,53 +466,53 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         #ifdef CONSOLE_ENABLE
           print("layer: SYM_NUM\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv(HSV_GREEN);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_GREEN);
         break;
       case MOVEMENT:
         #ifdef CONSOLE_ENABLE
           print("layer: MOVEMENT\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv(HSV_BLUE);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_BLUE);
         break;
       case MOUSE:
         #ifdef CONSOLE_ENABLE
           print("layer: MOUSE\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv(HSV_RED);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_RED);
         break;
       case BASE: case MAC:
         #ifdef CONSOLE_ENABLE
           print("layer: BASE\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_TYPING_HEATMAP);
         break;
       case GAMING:
         #ifdef CONSOLE_ENABLE
           print("layer: GAMING\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_CUSTOM_overwatch);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_overwatch);
         break;
       case FUNCTION:
         #ifdef CONSOLE_ENABLE
           print("layer: FUNCTION\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv(HSV_GOLD);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_GOLD);
         break;
       case UMLAUT:
         #ifdef CONSOLE_ENABLE
           print("layer: UMLAUT\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_CYCLE_LEFT_RIGHT);
         break;
       default:
         #ifdef CONSOLE_ENABLE
           print("layer: DEFAULT\n");
         #endif
-        rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_CYCLE_LEFT_RIGHT);
         break;
     }
     current_layer = new_layer;
